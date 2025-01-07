@@ -1,10 +1,13 @@
-import express from 'express';  
+import express from 'express';
 import dotenv from 'dotenv';
 import logger from 'morgan';
+//import cors so that I can make requests from my front end to my back end
 import cors from 'cors';
+// connect to the database
+import db from './db/connection.mjs';
 
+// Load the environment variables
 dotenv.config();
-
 
 //setup the PORT
 const PORT = process.env.PORT || 3000;
@@ -18,25 +21,29 @@ app.use(express.json());
 app.use(cors());
 
 
+
 // Routes
 app.get('/', (req, res) => {
     res.send('Welcome to the home page');
-  });
+});
+
 
 
 // Catch all route for any other requests that don't exist on the server and redirect to the home page
-app.get('/*', (req,res)=>{
+app.get('/*', (req, res) => {
     res.redirect('/');
 
 })
+
+
 
 // Global error handler
 app.use((err, req, res, next) => {
     console.error(err);
     res.status(500).send('Something went wrong!');
-  });
+});
 
 // Start the server
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
-  });
+});
