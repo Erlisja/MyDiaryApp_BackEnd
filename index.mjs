@@ -21,12 +21,15 @@ app.use(express.json());
 app.use(cors());
 
 
+import diaryEntryRoutes from './routes/diaryEntry.mjs';
 
 // Routes
 app.get('/', (req, res) => {
     res.send('Welcome to the home page');
 });
 
+// ROUTES
+app.use('/api/diary-entries', diaryEntryRoutes);  // Mount the diary entry routes 
 
 
 // Catch all route for any other requests that don't exist on the server and redirect to the home page
