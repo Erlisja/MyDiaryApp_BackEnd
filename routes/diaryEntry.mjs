@@ -1,6 +1,7 @@
 import express from 'express';
 const router = express.Router();
 import diaryEntryController from "../controllers/diaryEntry.mjs";
+import authenticationToken from "../middleware/authenticationToken.mjs"; // import the authenticationToken middleware to protect the diary entry routes
 
 
 // seed Route
@@ -11,7 +12,7 @@ router.get('/seed',diaryEntryController.seed)   // seed route
 
 //TODO: 1. Get all diary entries
 // ***   GET       /diary-entries - responds with an array of all diary entries
-router.get('/', diaryEntryController.getAllDiaryEntries)    // get all diary entries
+router.get('/', authenticationToken, diaryEntryController.getAllDiaryEntries)    // get all diary entries
 
 //TODO: 2. Create a new diary entry
 //TODO:  3. Get a single diary entry
