@@ -9,6 +9,9 @@ import db from './db/connection.mjs';
 // Load the environment variables
 dotenv.config();
 
+import users from './routes/user.mjs';
+import login from './routes/user.mjs';
+
 //setup the PORT
 const PORT = process.env.PORT || 3000;
 
@@ -29,7 +32,9 @@ app.get('/', (req, res) => {
 });
 
 // ROUTES
-app.use('/api/diary-entries', diaryEntryRoutes);  // Mount the diary entry routes 
+app.use('/api/diary-entries', diaryEntryRoutes);  // Mount the diary entry routes
+app.use('/api/users',users) 
+app.use('/api',login)
 
 
 // Catch all route for any other requests that don't exist on the server and redirect to the home page

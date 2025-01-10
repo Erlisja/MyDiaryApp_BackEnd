@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
-import { Schema } from 'mongoose';
+const Schema = mongoose.Schema;
 
 const SALT_ROUNDS = 10;
 
@@ -8,7 +8,7 @@ const userSchema = new Schema({
     username: {
         type: String,
         required: true,
-        unique: true
+      
     },
     email: {
         type: String,
@@ -36,19 +36,11 @@ const userSchema = new Schema({
 
 // Hash the password before saving the user
 userSchema.pre('save', async function (next) {
-    try {
-        // if the password has not been modified, then we don't need to hash it
-        if (!this.isModified('password')) {
-            return next();
-        }
-        // if the password has been modified, then we need to hash it
-        let hashedPassword = await bcrypt.hash(this.password, SALT_ROUNDS);
-        this.password = hashedPassword;
-        return next();
-    } catch (err) {
-        return next(err);
-    }
-
+    // 'this' is the user doc - this will be set to the user doc that is being saved
+    if(!this.isModified('password')) return next();
+    // password has been changed - salt and hash it
+    this.password = await bcrypt.hash(this.password, SALT_ROUNDS);
+    return next()
 });
 
 const User = mongoose.model('User', userSchema);

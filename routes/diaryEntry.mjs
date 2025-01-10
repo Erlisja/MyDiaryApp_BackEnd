@@ -1,7 +1,7 @@
 import express from 'express';
 const router = express.Router();
 import diaryEntryController from "../controllers/diaryEntry.mjs";
-import authenticationToken from "../middleware/authenticationToken.mjs"; // import the authenticationToken middleware to protect the diary entry routes
+import authenticationToken from "../middleware/authenticationToken.js"; // import the authenticationToken middleware to protect the diary entry routes
 
 
 // seed Route
