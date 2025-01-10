@@ -21,11 +21,11 @@ const diaryEntrySchema = new mongoose.Schema({
         enum: ["happy", "sad", "angry", "excited", "disgusted", "surprised", "neutral"],
         index: true,
     },
-    // user:{
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: "User",
-    //     required: true
-    // }
+    user:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true
+    },
     isFavorite: {
         type: Boolean,
         default: false,
