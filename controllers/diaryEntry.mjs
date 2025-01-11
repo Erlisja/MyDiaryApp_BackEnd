@@ -1,6 +1,9 @@
 import DiaryEntry from '../models/diaryEntry.mjs';
 
+
+
 // seed data
+// !!!! seed route is only for development purposes. It should be removed in deployment
 
 async function seed(req, res) {
     const Today = new Date();
@@ -72,16 +75,109 @@ async function seed(req, res) {
     }
 }
 
+// ** =====  CRUD operations on diary entries ====== **
+
+//** CREATE */
+// function that creates diary entries
+async function createDiaryEntry(req, res) {
+    const { title, content, tags, mood, isFavorite, createdAt } = req.body;
+    const userId = req.user._id;  // get the user id from the request object after the user has been authenticated by the authenticationToken middleware
+    console.log(req.body);
+
+    try {
+        const newDiaryEntry = await DiaryEntry.create({
+            title,
+            content,
+            tags,
+            mood,
+            isFavorite,
+            createdAt,
+            user: userId // add the user id to the diary entry
+        });
+        console.log(newDiaryEntry);
+        res.status(201).json(newDiaryEntry);
+    } catch (e) {
+        console.log(e);
+        res.status(500).send("Something went wrong while creating a new diary entry");
+    }
+}
+
+
+//** GET */
 // get all diary entries
 async function getAllDiaryEntries(req, res) {
-    try{
-        const diaryEntries = await DiaryEntry.find({});
+    const userId = req.user._id; // get the user id from the request object after the user has been authenticated by the authenticationToken middleware
+    try {
+        const diaryEntries = await DiaryEntry.find({ user: userId }); // find all diary entries that belong to the authenticated user
         res.status(200).json(diaryEntries);
-    }catch(e){
+    } catch (e) {
         console.log(e);
         res.status(500).send("Something went wrong while getting all diary entries");
     }
 }
 
 
-export default { seed, getAllDiaryEntries};
+//** UPDATE */
+// update a diary entry
+async function updateDiaryEntry(req, res) {
+    const { id } = req.params; // get the diary entry id from the request parameters
+    const userId = req.user._id; // get the user id from the request object after the user has been authenticated by the authenticationToken middleware
+    const { title, content, tags, mood, isFavorite } = req.body; // get the updated diary entry data from the request body
+
+    try {
+        const updatedDiaryEntry = await DiaryEntry.findOneAndUpdate(
+            {
+                _id: id,
+                user: userId
+            },
+            {
+                title,
+                content,
+                tags,
+                mood,
+                isFavorite
+            },
+            {
+                new: true
+            }
+        );
+        if (!updatedDiaryEntry) {
+            return res.status(404).send("Diary entry not found");
+        }
+        console.log(updatedDiaryEntry);
+        res.status(200).json(updatedDiaryEntry);
+    } catch (e) {
+        console.log(e);
+        res.status(500).send("Something went wrong while updating the diary entry");
+    }
+
+}
+
+
+//** DELETE */
+// delete a diary entry
+async function deleteDiaryEntry(req, res) {
+    const { id } = req.params; // get the diary entry id from the request parameters
+    const userId = req.user._id; // get the user id from the request object after the user has been authenticated by the authenticationToken middleware
+
+    try {
+        const deletedDiaryEntry = await DiaryEntry.findOneAndDelete({
+            _id: id,
+            user: userId
+        });
+        if (!deletedDiaryEntry) {
+            return res.status(404).send("Diary entry not found");
+        }
+
+        console.log(deletedDiaryEntry);
+
+        // !!! send the deleted diary entry as a response (this is optional) check the front end to see if you need to send the deleted diary entry as a response
+        res.status(200).json(deletedDiaryEntry); // send the deleted diary entry as a response
+    } catch (e) {
+        console.log(e);
+        res.status(500).send("Something went wrong while deleting the diary entry");
+    }
+}
+
+
+export default { seed, getAllDiaryEntries, updateDiaryEntry, createDiaryEntry, deleteDiaryEntry };

@@ -12,6 +12,7 @@ dotenv.config();
 import users from './routes/user.mjs';
 import login from './routes/user.mjs';
 
+
 //setup the PORT
 const PORT = process.env.PORT || 3000;
 
@@ -21,6 +22,8 @@ const app = express();
 // Middleware
 app.use(logger('dev'));
 app.use(express.json());
+// app.use(cors());
+
 app.use(cors());
 
 
