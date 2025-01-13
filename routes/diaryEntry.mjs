@@ -18,13 +18,18 @@ router.get('/', authenticationToken, diaryEntryController.getAllDiaryEntries)   
 // ***   POST      /diary-entries - creates a new diary entry
 router.post('/diary-entries', authenticationToken, diaryEntryController.createDiaryEntry)   // create a new diary entry
 
-//TODO:  3. Get a single diary entry
+//TODO:  3. Get last 5 diary entry
+// ***   GET       /diary-entries/last5 - responds with an array of the last 5 diary entries
+router.get('/last5', authenticationToken, diaryEntryController.getSomeEntries)   // get the last 5 diary entries
 
 //TODO:  4. Update a single diary entry
 router.put('/:id', authenticationToken, diaryEntryController.updateDiaryEntry)   // update a single diary entry
 
 //TODO:  5. Delete a single diary entry
 router.delete('/:id', authenticationToken, diaryEntryController.deleteDiaryEntry)   // delete a single diary entry
+
+// TODO:  6. Get a single diary entry by id
+router.get('/:id', authenticationToken,diaryEntryController.getSingleDiaryEntry)   // get a single diary entry by id
 
 
 

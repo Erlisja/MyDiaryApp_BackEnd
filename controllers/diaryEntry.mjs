@@ -153,6 +153,19 @@ async function updateDiaryEntry(req, res) {
 
 }
 
+// Get the last 5 diary entries
+async function getSomeEntries(req, res) {
+    const userId = req.user._id; // get the user id from the request object after the user has been authenticated by the authenticationToken middleware
+    try {
+        const diaryEntries = await DiaryEntry.find({ user: userId }).sort({ createdAt: -1 }).limit(5); // find all diary entries that belong to the authenticated user
+        res.status(200).json(diaryEntries);
+    } catch (e) {
+        console.log(e);
+        res.status(500).send("Something went wrong while getting all diary entries");
+    }
+
+}
+
 
 //** DELETE */
 // delete a diary entry
@@ -180,4 +193,23 @@ async function deleteDiaryEntry(req, res) {
 }
 
 
-export default { seed, getAllDiaryEntries, updateDiaryEntry, createDiaryEntry, deleteDiaryEntry };
+// ** GET a single diary entry */   
+// get a single diary entry
+async function getSingleDiaryEntry (req, res) {
+    const {id} = req.params; // get the diary entry id from the request parameters
+    const userId = req.user._id; // get the user id from the request object after the user has been authenticated by the authenticationToken middleware
+
+    try{
+        const diaryEntry = await DiaryEntry.findOne({_id: id, user: userId});
+        if(!diaryEntry){
+            return res.status(404).send("Diary entry not found");
+        }
+        console.log(diaryEntry);
+        res.status(200).json(diaryEntry);
+
+    }catch(e){
+        res.status(500).send("Something went wrong while getting the diary entry");
+    }
+}
+
+export default { seed, getAllDiaryEntries, updateDiaryEntry, createDiaryEntry, deleteDiaryEntry, getSomeEntries, getSingleDiaryEntry };
