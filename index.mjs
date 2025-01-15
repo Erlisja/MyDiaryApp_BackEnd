@@ -28,17 +28,20 @@ app.use(cors());
 
 
 import diaryEntryRoutes from './routes/diaryEntry.mjs';
+import goalsEntryRoutes from './routes/goalsEntry.mjs';
 
 // Routes
 app.get('/', (req, res) => {
     res.send('Welcome to the home page');
 });
 
-// ROUTES
+// Diary Entry ROUTES
 app.use('/api/diary-entries', diaryEntryRoutes);  // Mount the diary entry routes
 app.use('/api/users',users) 
 app.use('/api',login)
 
+// Goals Entry ROUTES
+app.use('/api/goal-entries', goalsEntryRoutes);  // Mount the goals entry routes
 
 // Catch all route for any other requests that don't exist on the server and redirect to the home page
 app.get('/*', (req, res) => {
