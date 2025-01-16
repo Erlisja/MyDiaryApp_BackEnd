@@ -41,6 +41,8 @@ const diaryEntrySchema = new mongoose.Schema({
 
 // add a text index to the title and content fields
 diaryEntrySchema.index({ title: "text", content: "text" });
+diaryEntrySchema.index({ tags: "text" });
+
 
 export default mongoose.model("DiaryEntry", diaryEntrySchema);
 

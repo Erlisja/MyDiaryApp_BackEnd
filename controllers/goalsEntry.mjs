@@ -94,5 +94,4 @@ async function deleteGoalEntry(req, res) {
 
 
 
-
 export default { createGoalEntry, getAllGoals, updateGoalEntry, deleteGoalEntry };

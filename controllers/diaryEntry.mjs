@@ -77,7 +77,7 @@ async function seed(req, res) {
 
 // ** =====  CRUD operations on diary entries ====== **
 
-//** CREATE */
+// ** CREATE */
 // function that creates diary entries
 async function createDiaryEntry(req, res) {
     const { title, content, tags, mood, isFavorite, createdAt } = req.body;
@@ -117,8 +117,74 @@ async function getAllDiaryEntries(req, res) {
 }
 
 
+// !!!! This is not working. It is not returning the count of diary entries
+// Get the count of all diary entries
+async function getDiaryEntriesCount(req, res) {
+     console.log("Request User:", req.user); // Log the user object
+
+    const userId = req.user._id; // get the user id from the request object
+    console.log("userid", userId);
+    try {
+        const filter = { user: userId }; // filter diary entries by user id
+        console.log("Filter for countDocuments:", filter);
+        const diaryEntriesCount = await DiaryEntry.countDocuments(filter); // count all diary entries that belong to the authenticated user
+        res.status(200).json({'count':diaryEntriesCount}); // Return the count of diary entries
+    } catch (e) {
+        console.error("Error fetching count:", e);  // Log error details
+        // res.status(500).send("Something went wrong while getting all diary entries");
+        res.status(500).send(e, req.user);
+    }
+}
+
+
+
+
+
+// Get all diary entry dates
+async function getDiaryEntryDates(req, res) {
+    const userId = req.user._id; // get the user id from the request object after the user has been authenticated by the authenticationToken middleware
+    try {
+        const diaryEntryDates = await DiaryEntry.find({ user: userId }).distinct("createdAt"); // find all diary entries that belong to the authenticated user
+        res.status(200).json(diaryEntryDates);
+    } catch (e) {
+        console.log(e);
+        res.status(500).send("Something went wrong while getting all diary entry dates");
+    }
+}
+
+// get diary entry by date
+async function getDiaryEntryByDate(req, res) {
+    const { date } = req.params; // get the date from the request parameters
+    const userId = req.user._id; // get the user id from the request object after the user has been authenticated by the authenticationToken middleware
+    console.log("Date received:", date);
+    try {
+        const diaryEntry = await DiaryEntry.findOne({ user: userId, createdAt: date }); // find a diary entry that belongs to the authenticated user and has the specified date
+        if (!diaryEntry) {
+            return res.status(404).send("Diary entry not found");
+        }
+        res.status(200).json(diaryEntry);
+    } catch (e) {
+        console.log(e);
+        res.status(500).send("Something went wrong while getting the diary entry by date");
+    }
+}
+
+
+async function getDates(req, res) {
+    const userId = req.user._id;
+    try {
+        const dates = await DiaryEntry.find({ user: userId }).distinct("createdAt");
+        res.status(200).json(dates);
+    } catch (e) {
+        console.log(e);
+        res.status(500).send("Something went wrong while getting all diary entry dates");
+    }   
+}
+
+
+
 //** UPDATE */
-// update a diary entry
+ // update a diary entry
 async function updateDiaryEntry(req, res) {
     const { id } = req.params; // get the diary entry id from the request parameters
     const userId = req.user._id; // get the user id from the request object after the user has been authenticated by the authenticationToken middleware
@@ -167,7 +233,7 @@ async function getSomeEntries(req, res) {
 }
 
 
-//** DELETE */
+// //** DELETE */
 // delete a diary entry
 async function deleteDiaryEntry(req, res) {
     const { id } = req.params; // get the diary entry id from the request parameters
@@ -208,8 +274,11 @@ async function getSingleDiaryEntry (req, res) {
         res.status(200).json(diaryEntry);
 
     }catch(e){
-        res.status(500).send("Something went wrong while getting the diary entry");
+        res.status(500).send(e);
     }
 }
 
-export default { seed, getAllDiaryEntries, updateDiaryEntry, createDiaryEntry, deleteDiaryEntry, getSomeEntries, getSingleDiaryEntry };
+export default {getDates, seed, getAllDiaryEntries, updateDiaryEntry, createDiaryEntry,deleteDiaryEntry, getSomeEntries, getSingleDiaryEntry,getDiaryEntriesCount,getDiaryEntryDates, getDiaryEntryByDate};
+
+
+

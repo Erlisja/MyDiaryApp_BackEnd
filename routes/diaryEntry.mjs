@@ -4,9 +4,9 @@ import authenticationToken from "../middleware/authenticationToken.js"; // impor
 
 const router = express.Router();
 
-// seed Route
-// !!! seed route is only for development purposes. It should be removed in deployment
-router.get('/seed',diaryEntryController.seed)   // seed route
+// // seed Route
+// // !!! seed route is only for development purposes. It should be removed in deployment
+// router.get('/seed',diaryEntryController.seed)   // seed route
 
 // TODO: Add routes for CRUD operations on diary entries
 
@@ -28,15 +28,27 @@ router.put('/:id', authenticationToken, diaryEntryController.updateDiaryEntry)  
 //TODO:  5. Delete a single diary entry
 router.delete('/:id', authenticationToken, diaryEntryController.deleteDiaryEntry)   // delete a single diary entry
 
+
+// TODO: 7. Get the count of all diary entries
+router.get('/count', authenticationToken, diaryEntryController.getDiaryEntriesCount);
+
+
+
+// //TODO:  8. Get all dates for diary entries
+// ***  GET       /diary-entries/dates/:date responds with an array of all diary entries for a given date
+router.get('/dates',authenticationToken, diaryEntryController.getDates)   // get all diary entries for a given date
+
+
+
 // TODO:  6. Get a single diary entry by id
 router.get('/:id', authenticationToken,diaryEntryController.getSingleDiaryEntry)   // get a single diary entry by id
 
 
-
-
 //TODO:  6. Get all diary entries by mood
 //TODO:  7. Get all diary entries by tag
-//TODO:  8. Get all diary entries by date
+
+
+
 //TODO:  9. Get all diary entries by title and content
 //TODO:  10. Get all diary entries by favorite
 //TODO:  11. Get all diary entries by date range

@@ -1,7 +1,7 @@
 import express from 'express';
 const router = express.Router();
 import userController from '../controllers/user.mjs';
-import authenticationToken from '../middleware/authenticationToken.js';
+ import authenticationToken from '../middleware/authenticationToken.js';
 
 router.post('/', userController.create); // user signup route
 
