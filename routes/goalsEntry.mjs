@@ -10,6 +10,9 @@ router.get('/', authenticationToken, goalsEntryController.getAllGoals) // get al
 // POST a new goal entry route
 router.post('/newGoal', authenticationToken, goalsEntryController.createGoalEntry) // create a new goal entry
 
+// Get the total number of goals
+router.get('/total', authenticationToken, goalsEntryController.getGoalCount) // get the total number of goals
+
 // PUT an updated goal entry route
 router.put('/:id', authenticationToken, goalsEntryController.updateGoalEntry) // update a single goal entry
 

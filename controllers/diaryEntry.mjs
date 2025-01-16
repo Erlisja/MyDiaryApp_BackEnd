@@ -117,7 +117,7 @@ async function getAllDiaryEntries(req, res) {
 }
 
 
-// !!!! This is not working. It is not returning the count of diary entries
+
 // Get the count of all diary entries
 async function getDiaryEntriesCount(req, res) {
      console.log("Request User:", req.user); // Log the user object

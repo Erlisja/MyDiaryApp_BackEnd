@@ -92,6 +92,18 @@ async function deleteGoalEntry(req, res) {
     
 }
 
+// get the total number of goals
+async function getGoalCount(req, res) {
+    const userId = req.user._id;
+    try {
+        const goalCount = await goalsEntry.countDocuments({ user: userId });
+        res.status(200).json({'count': goalCount});
+    } catch (e) {
+        console.log(e);
+        res.status(500).send("Something went wrong while getting the total number of goals");
+    }
+}
 
 
-export default { createGoalEntry, getAllGoals, updateGoalEntry, deleteGoalEntry };
+
+export default { createGoalEntry, getAllGoals, updateGoalEntry, deleteGoalEntry,getGoalCount };

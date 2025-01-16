@@ -7,4 +7,6 @@ router.post('/', userController.create); // user signup route
 
 router.post('/login', userController.login); // user login route
 
+router.put('/update', authenticationToken, userController.update); // user update route 
+
 export default router;
