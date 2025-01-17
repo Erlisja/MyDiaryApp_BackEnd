@@ -29,51 +29,76 @@ function createJWT(user) {
 
 //*** UPDATE function 
 // function to update a user's information, name and password, the email cannot be updated 
+
 async function update(req, res) {
     try {
-        // find the user in the database
-        const foundUser = await User.findOne({ email: req.body.email });
-        // if the user is not found, return an error message
-        if (!foundUser) return res.status(401).json('User not found. Please sign up');
-        // compare the password with the hashed password in the database
-        const match =  bcrypt.compare(req.body.password, foundUser.password);
-        // if the password does not match, return an error message
-        if (!match) return res.status(401).json('Invalid password. Please try again');
-        // update the user's information
-        const updatedUser = await User.findOneAndUpdate(
-            { email: req.body.email },
-            { name: req.body.name, password: req.body.newPassword },
-            { new: true }
-        );
-        res.status(200).json(updatedUser);
+        const { email, password, username, newPassword } = req.body;
+        console.log('Request body:', req.body);
 
+        // Find the user by email
+        const foundUser = await User.findOne({ email });
+        if (!foundUser) {
+            return res.status(404).json('User not found. Please sign up');
+        }
+
+        // Ensure the current password is provided
+        if (!password || !foundUser.password) {
+            return res.status(400).json('Current password is required');
+        }
+
+        // Compare the current password with the hashed password in the database
+        const isMatch = await bcrypt.compare(password, foundUser.password);
+        if (!isMatch) {
+            return res.status(401).json('Invalid current password. Please try again');
+        }
+
+        // Prepare the updates
+        const updates = {};
+        if (username) updates.username = username;
+        if (newPassword) {
+            updates.password = await bcrypt.hash(newPassword, 10);
+        }
+        console.log('Updates:', updates);
+
+        // Update the user's data
+        const updatedUser = await User.findOneAndUpdate({ email }, updates, { new: true });
+        console.log('Updated user:', updatedUser);
+
+        // Generate a new token
+        const token = createJWT(updatedUser);
+        console.log('New token:', token);
+
+        // Send the updated user and token (excluding password) in the response
+        const { password: _, ...userWithoutPassword } = updatedUser.toObject();
+        res.status(200).json({ message: 'User updated successfully', user: userWithoutPassword, token });
     } catch (error) {
-        res.status(401).json('An error occurred. Please try again');
+        console.error('Error updating user:', error);
+        res.status(500).json('An error occurred. Please try again');
     }
-
-
 }
-
-
-// ==== Login function ====
-// *** This function verifies the user credentials and creates a JWT token for the user if the user exists in the database and the password matches the hashed password in the database
 
 async function login(req, res) {
     try {
-        // find the user in the database
-        const foundUser = await User.findOne({ email: req.body.email });
-        // if the user is not found, return an error message
-        if (!foundUser) return res.status(401).json('User not found. Please sign up');
-        // compare the password with the hashed password in the database
-        const match =  bcrypt.compare(req.body.password, foundUser.password);
-        // if the password does not match, return an error message
-        if (!match) return res.status(401).json('Invalid password. Please try again');
-        // create a JWT token for the user if the password matches
-        const token = createJWT(foundUser);
-        res.status(200).json(token);
-    } catch (error) {
-        res.status(401).json('An error occurred. Please try again');
+        const { email, password } = req.body;
 
+        // Find user by email
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json('User not found');
+        }
+
+        // Verify password
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(401).json('Invalid credentials');
+        }
+
+        // Generate a new token
+        const token = createJWT(user);
+        res.status(200).json({ message: 'Login successful', user, token });
+    } catch (error) {
+        console.error('Error during login:', error);
+        res.status(500).json('An error occurred. Please try again');
     }
 }
 

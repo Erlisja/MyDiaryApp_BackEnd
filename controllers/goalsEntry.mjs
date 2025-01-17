@@ -1,4 +1,5 @@
 import goalsEntry from "../models/goalsEntry.mjs";
+import mongoose from "mongoose";
 
 // ***** CRUD  operations for goalsEntry *****
 
@@ -38,9 +39,11 @@ async function getAllGoals(req, res) {
 
 // ** 3. UPDATE a single goal entry
 async function updateGoalEntry(req, res) {
-    const { title, description, deadline, priority } = req.body;
+    const { title, description, deadline, priority,status } = req.body;
     const userId = req.user._id;
     const { id } = req.params;
+
+    
 
     try {
         const updatedGoalEntry = await goalsEntry.findOneAndUpdate(
@@ -52,7 +55,8 @@ async function updateGoalEntry(req, res) {
                 title,
                 description,
                 deadline,
-                priority
+                priority,
+                status
             },
             {
                 new: true // return the updated entry
