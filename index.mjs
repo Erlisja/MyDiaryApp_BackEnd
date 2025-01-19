@@ -27,6 +27,7 @@ app.use(cors());
 
 import diaryEntryRoutes from './routes/diaryEntry.mjs';
 import goalsEntryRoutes from './routes/goalsEntry.mjs';
+import affirmationRoutes from './routes/affirmation.mjs';
 
 // Routes
 app.get('/', (req, res) => {
@@ -40,6 +41,9 @@ app.use('/api',login)
 
 // Goals Entry ROUTES
 app.use('/api/goal-entries', goalsEntryRoutes);  // Mount the goals entry routes
+
+// Affirmation ROUTES
+app.use('/api', affirmationRoutes);  // Mount the affirmation routes
 
 // Catch all route for any other requests that don't exist on the server and redirect to the home page
 app.get('/*', (req, res) => {
