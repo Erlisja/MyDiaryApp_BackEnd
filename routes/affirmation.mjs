@@ -1,6 +1,6 @@
 // routes/affirmation.js
 import express from "express";
-import { getAffirmation } from "../services/openai.js";
+import { getAffirmation } from "../controllers/affirmation.mjs";
 const router = express.Router();
 
 router.get("/affirmation", async (req, res) => {
