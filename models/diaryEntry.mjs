@@ -18,7 +18,7 @@ const diaryEntrySchema = new mongoose.Schema({
     mood: {
         type: String,
         required: true,
-        enum: ["happy", "sad", "angry", "excited", "disgusted", "surprised", "neutral"],
+        enum: ["happy","love", "sad", "angry", "excited", "disgusted", "surprised", "neutral"],
         index: true,
     },
     user:{
