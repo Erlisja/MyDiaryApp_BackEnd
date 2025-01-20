@@ -10,16 +10,16 @@ const authenticationToken = (req, res, next) => {
     // Get the token from the Authorization header
     // The token is in the format 'Bearer <token>', we are interested in the token part
     const token = req.headers["authorization"]?.split(" ")[1];
-    console.log("Token received: ", token);
+    // console.log("Token received: ", token);
     if (token) {
         jwt.verify(token, process.env.SECRET, (err, decoded) => {
             if (err) return res.status(403).send("Token is not valid");
             req.user = decoded.user; // Add the user object to the request object
-             console.log(req.url ,req.user);
+            
             next();
         });
     } else {
-        console.log(err);
+        
         return res.status(401).send("Access denied");
         
     }

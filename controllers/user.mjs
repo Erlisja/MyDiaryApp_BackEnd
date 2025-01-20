@@ -33,7 +33,7 @@ function createJWT(user) {
 async function update(req, res) {
     try {
         const { email, password, username, newPassword } = req.body;
-        console.log('Request body:', req.body);
+        
 
         // Find the user by email
         const foundUser = await User.findOne({ email });
@@ -62,7 +62,7 @@ async function update(req, res) {
 
         // Update the user's data
         const updatedUser = await User.findOneAndUpdate({ email }, updates, { new: true });
-        console.log('Updated user:', updatedUser);
+        
 
         // Generate a new token
         const token = createJWT(updatedUser);
@@ -72,7 +72,7 @@ async function update(req, res) {
         const { password: _, ...userWithoutPassword } = updatedUser.toObject();
         res.status(200).json({ message: 'User updated successfully', user: userWithoutPassword, token });
     } catch (error) {
-        console.error('Error updating user:', error);
+       
         res.status(500).json('An error occurred. Please try again');
     }
 }
@@ -97,7 +97,7 @@ async function login(req, res) {
         const token = createJWT(user);
         res.status(200).json({ message: 'Login successful', user, token });
     } catch (error) {
-        console.error('Error during login:', error);
+        
         res.status(500).json('An error occurred. Please try again');
     }
 }
