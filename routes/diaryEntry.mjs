@@ -4,9 +4,6 @@ import authenticationToken from "../middleware/authenticationToken.js"; // impor
 
 const router = express.Router();
 
-// // seed Route
-// // !!! seed route is only for development purposes. It should be removed in deployment
-// router.get('/seed',diaryEntryController.seed)   // seed route
 
 // TODO: Add routes for CRUD operations on diary entries
 
@@ -42,16 +39,6 @@ router.get('/dates',authenticationToken, diaryEntryController.getDates)   // get
 
 // TODO:  6. Get a single diary entry by id
 router.get('/:id', authenticationToken,diaryEntryController.getSingleDiaryEntry)   // get a single diary entry by id
-
-
-//TODO:  6. Get all diary entries by mood
-//TODO:  7. Get all diary entries by tag
-
-
-
-//TODO:  9. Get all diary entries by title and content
-//TODO:  10. Get all diary entries by favorite
-//TODO:  11. Get all diary entries by date range
 
 
 export default router;
