@@ -3,7 +3,7 @@ import express from "express";
 import { getAffirmation } from "../controllers/affirmation.mjs";
 const router = express.Router();
 
-router.get("/affirmation", async (req, res) => {
+router.get("/", async (req, res) => {
   const mood = req.query.mood || "neutral"; // Default to "neutral" if no mood is provided
   try {
     const affirmation = await getAffirmation(mood);

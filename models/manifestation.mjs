@@ -25,4 +25,5 @@ const manifestationSchema = new mongoose.Schema({
     }
 ,{timestamps:true});
 
+
 export default mongoose.model("Manifestation", manifestationSchema);
